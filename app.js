@@ -31,12 +31,29 @@ app.get("/random-beer", (req, res) => {
   punkAPI
   .getRandom()
   .then(responseFromApi => {
-    res.render("randomBeer", {responseFromApi})})
+    res.render("randomBeer", responseFromApi[0])})
   .catch(error => console.log(error)); 
 });
 
 app.get('/', (req, res) => {
   res.render('index');
+});
+
+// Bonus 6
+app.all('/:id', (req, res) => {
+	const id = req.params.id;
+
+	punkAPI
+		.getBeer(id)
+		.then((responseFromDB) => {
+			console.log('Response is:', responseFromDB);
+
+			const singleBeer = responseFromDB[0];
+			console.log("the beer: ", singleBeer);
+
+			res.render("single-beer", singleBeer);
+		})
+		.catch((err) => console.log(err));
 });
 
 app.listen(3000, () => console.log('🏃‍ on port 3000'));
